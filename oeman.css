@@ -1,0 +1,208 @@
+.body{
+    background-color: rgb(255, 255, 255);
+}
+.link{
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    border: solid 2px;  
+    padding: 25px; 
+    margin:25px;
+
+}
+.hlink{
+    border: solid 2px #035a03;
+    padding:10px;
+}
+h2{
+    color:rgb(250, 103, 4);
+    align-content: center;
+}
+.site-branding{
+    display:inline-flex;
+    color:rgb(255, 255, 255);
+      
+}
+ #BIT{
+    padding:25px 25px 25px 5px;
+    margin:20px;
+    text-align: center;
+} 
+.site-header{
+    width:100%;
+    background:rgb(65, 0, 168);
+    /*border-bottom:3px solid black; */
+    text-align: center;
+}
+
+.container{
+/* overflow:auto; */
+width:100%;
+}
+#logo{
+    margin:20px;
+    position:relative;
+    right:210px;
+}
+.main{
+    background-color: #9aff9a;
+}
+.OEMS{
+    font-family:Verdana, Geneva, Tahoma, sans-serif;
+    margin-left:60px;
+    padding-top:40px;
+    margin-bottom:40px;
+    
+}
+.container2{
+    padding-left:100px;
+    padding-top:10px;
+    padding-bottom:20px;
+}
+.link1{
+    color:black;
+}
+.btn{
+    margin-left: 145px;
+    margin-top: 9px;
+    margin-bottom: 30px;
+    background-color: #89d889;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+}
+
+.footer{
+    
+    align-content:center;
+}
+/*------------------------------- Department login -----------------------*/
+.main2{
+    background-color: #9aff9a;
+}
+.dev{
+    padding-left:180px;
+    padding-top:25px;
+}
+#fac{
+    margin:30px;
+    color:#ff880091;
+}
+
+form {border: 3px solid #f1f1f1;}
+
+input[type=text], input[type=password] {
+  width: 35%;
+  /*padding: 12px 20px;
+  margin: 8px 0; */
+   border: 2px solid black;
+  box-sizing: border-box;
+}
+.dep{
+    margin:30px;
+}
+/*button {
+    background-color: #04AA6D;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+  }
+  */
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  .cancelbtn {
+    padding: 10px 18px;
+    background-color: #f44336;
+  }
+  .container3 {
+    padding: 16px;
+  }
+  .pass{
+      padding:10px;
+      margin: 20px 0px 12px 40px;
+  }
+  .dpt{
+    padding:10px;
+    margin: 20px 0px 12px 0px;
+  }
+  span.psw {
+    padding-top: 16px;
+    padding-left:0px;
+  }
+  .logbtn{
+    background-color: #04AA6D;
+    color: white;
+    padding: 12px 20px;
+    margin: 10px 40px;
+    border: none;
+    cursor: pointer;
+    width: 60pxpx;
+}
+  
+  /* Change styles for span and cancel button on extra small screens */
+  @media screen and (max-width: 300px) {
+    span.psw {
+       float: none;
+    }
+   
+    .cancelbtn {
+        width: 30px;
+        
+     }
+}
+
+/*------------------------ Style to Department Page* ------------------------*/
+.main3{
+    background-color: #9aff9a;
+}
+.man{
+    text-align:  center;
+}
+.manbtn{
+    background-color: #035a03;
+    color:white;
+    width: 60%;
+    height: 43px;
+    margin: 20px;
+}
+#manbtn1{
+    margin-top:75px;
+}
+/*--------------------------------------------------------------------------*/
+
+/*------------------------ Style to Open  Elective ------------------------*/
+.main4{
+    background-color: #9aff9a;
+}
+table, th, td {
+    margin:0 auto;
+    border:2px solid black;
+    padding:10px;
+    text-align: center;
+  }
+
+  .oetab{
+      margin-top:50px;
+      font-size: 20px;
+    
+  }
+  .rembtn{
+      background-color: #f44336;
+      color:white;
+  }
+  .addoe{
+      margin:65px;
+  }
+  .inp{
+      height:40px;
+      border:2px solid black;
+      margin:20px;
+      padding:10px;
+      margin-left:50px;
+  }
+  .addbtn{
+      background-color: #035a03;
+      color: white;
+      width:60px;
+  }
