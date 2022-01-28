@@ -1,14 +1,90 @@
+from crypt import methods
+import re
 from OEMS import app
 from flask import render_template, redirect, url_for, flash, request
-from OEMS.models import Item, User
-from OEMS.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm
-from flask_login import login_user, logout_user, login_required, current_user
+from OEMS.forms import LoginForm, RegisterForm
+#from OEMS.models import Item, User
+#from OEMS.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm
+#from flask_login import login_user, logout_user, login_required, current_user
 
 @app.route('/')
 @app.route('/home')
 def home_page():
     return render_template('home.html')
 
+
+@app.route('/login', methods = ['GET', 'POST'])
+def login_page():
+    form = LoginForm()
+    return render_template('login.html', form=form)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register_page():
+    form = RegisterForm()
+    if form.errors != {}: #If there are not errors from the validations
+        for err_msg in form.errors.values():
+            flash(f'There was an error with creating a user: {err_msg}', category='danger')
+
+    return render_template('register.html', form=form)
+
+
+@app.route('/user/department')
+def department_page():
+    return render_template('department.html')
+
+@app.route('/user/student')
+def student_page():
+    return render_template('student.html')
+
+@app.route('/user/teacher')
+def teacher_page():
+    return render_template('teacher.html')
+
+@app.route('/user/admin')
+def admin_page():
+    return render_template('admin.html')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 @app.route('/market', methods=['GET', 'POST'])
 @login_required
 def market_page():
@@ -78,8 +154,9 @@ def login_page():
 def logout_page():
     logout_user()
     flash("You have been logged out!", category='info')
-    return redirect(url_for("home_page"))
 
+   return redirect(url_for("home_page"))
+'''
 
 
 

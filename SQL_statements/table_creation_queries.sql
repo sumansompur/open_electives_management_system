@@ -1,6 +1,6 @@
 create table department(
 department_code varchar(5),
-department_name varchar(25),
+department_name varchar(40),
 constraint pk_dept_code primary key(department_code));
 
 create table teacher(
