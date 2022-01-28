@@ -1,5 +1,4 @@
 from crypt import methods
-import re
 from OEMS import app
 from flask import render_template, redirect, url_for, flash, request
 from OEMS.forms import LoginForm, RegisterForm
