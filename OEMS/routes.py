@@ -92,7 +92,7 @@ def admin_manage_departments():
     return render_template('admin_depts.html')
     
 
-@app.route('/user/manage-users')
+@app.route('/user/admin/manage-users')
 def admin_manages_users():
     return render_template('admin_users.html')
 

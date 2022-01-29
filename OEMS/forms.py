@@ -38,20 +38,3 @@ class ViewStudentForm(FlaskForm):
     department = SelectField(label='Filter by Department', choices=['All'] + [], validators=[DataRequired()])
     submit = SubmitField(label='Display Students')
 
-
-
-'''
-
-
-
-class LoginForm(FlaskForm):
-    username = StringField(label='User Name:', validators=[DataRequired()])
-    password = PasswordField(label='Password:', validators=[DataRequired()])
-    submit = SubmitField(label='Sign in')
-
-class PurchaseItemForm(FlaskForm):
-    submit = SubmitField(label='Purchase Item!')
-
-class SellItemForm(FlaskForm):
-    submit = SubmitField(label='Sell Item!')
-'''
