@@ -1,24 +1,26 @@
 from crypt import methods
 from OEMS import app
 from flask import render_template, redirect, url_for, flash, request
-from OEMS.forms import LoginForm, RegisterForm, ViewStudentForm
+from OEMS.forms import AddDepartmentForm, AddTeacherForm, AddStudentForm, LoginForm, RegisterForm, ViewStudentForm, ViewStudentFormDept, AddElectiveForm
 #from OEMS.models import Item, User
 #from OEMS.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm
 #from flask_login import login_user, logout_user, login_required, current_user
 
+
+#HOME ROUTES
 @app.route('/')
-@app.route('/home')
+@app.route('/home/')
 def home_page():
     return render_template('home.html')
 
 
-@app.route('/login', methods = ['GET', 'POST'])
+@app.route('/login/', methods = ['GET', 'POST'])
 def login_page():
     form = LoginForm()
     return render_template('login.html', form=form)
 
 
-@app.route('/register', methods=['GET', 'POST'])
+@app.route('/register/', methods=['GET', 'POST'])
 def register_page():
     form = RegisterForm()
     if form.errors != {}: #If there are not errors from the validations
@@ -31,50 +33,44 @@ def register_page():
 
 
 #DEPARTMENT ROUTES
-@app.route('/user/department')
+@app.route('/user/department/')
 def department_page():
     return render_template('department.html')
 
 
-@app.route('/user/department/manage-electives')
+@app.route('/user/department/manage-electives/', methods = ['GET', 'POST'])
 def manage_electives():
-    return render_template('dept_electives.html')
+    form=AddElectiveForm()
+    return render_template('dept_electives.html', form=form)
 
 
-@app.route('/user/department/manage-students')
+@app.route('/user/department/manage-students/', methods = ['GET', 'POST'])
 def manage_students():
-    return render_template('dept_students.html')
+    form = AddStudentForm()
+    return render_template('dept_students.html', form=form)
 
 
-@app.route('/user/department/manage-teachers')
+@app.route('/user/department/manage-teachers/', methods = ['GET', 'POST'])
 def manage_teachers():
-    return render_template('dept_teachers.html')
+    form = AddTeacherForm()
+    return render_template('dept_teachers.html' , form=form)
 
 
-@app.route('/user/department/view-students', methods=['GET', 'POST'])
-@app.route('/user/teacher', methods=['GET', 'POST'])
-def view_students():
-    form = ViewStudentForm()
-    return render_template('teacher.html', form=form)
+@app.route('/user/department/view-students/', methods=['GET', 'POST'])
+def dept_view_students():
+    form = ViewStudentFormDept()
+    return render_template('view_students.html', form=form)
+
 
 
 
 
 
 #STUDENT ROUTES
-@app.route('/user/student')
+@app.route('/user/student/')
 def student_page():
     return render_template('student.html')
 
-
-@app.route('/user/student/view_details')
-def view_student_elective():
-    return render_template('student_view_elective.html')
-
-
-@app.route('/user/student/change_details')
-def change_student_elective():
-    return render_template('student_change_elective.html')
 
 
 
@@ -82,20 +78,32 @@ def change_student_elective():
 
 
 #ADMIN ROUTES
-@app.route('/user/admin')
+@app.route('/user/admin/')
 def admin_page():
     return render_template('admin.html')
 
 
-@app.route('/user/admin/manage-departments')
+@app.route('/user/admin/manage-departments/', methods = ['GET', 'POST'])
 def admin_manage_departments():
-    return render_template('admin_depts.html')
+    form=AddDepartmentForm()
+    return render_template('admin_depts.html', form=form)
     
 
-@app.route('/user/admin/manage-users')
+@app.route('/user/admin/manage-users/', methods = ['GET', 'POST'])
 def admin_manages_users():
     return render_template('admin_users.html')
 
+
+
+
+
+
+
+#TEACHER ROUTES
+@app.route('/user/teacher', methods=['GET', 'POST'])
+def view_students():
+    form = ViewStudentForm()
+    return render_template('teacher.html', form=form)
 
 
 

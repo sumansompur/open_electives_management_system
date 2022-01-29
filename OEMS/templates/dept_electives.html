@@ -6,7 +6,12 @@
 
 <div class="row" style="margin-top:20px; margin-left:20px">
    <div class="col-11">
-        <h3>Manage Electives:</h3>
+      <div class="row">
+         <h3 scope="col" class="col-8">Manage Electives:</h3>
+         <a scope="col" class="btn btn-success col-1" style="width: 15em;" href="#add">Add New Elective</a>
+         &nbsp;&nbsp;&nbsp;
+         <a scope="col" class="btn btn-info col-1" style="width: 15em;" href="{{ url_for('department_page') }}">Back</a>
+      </div>
         <br>
         <br>
         <table class="table table-hover table-striped table-info table-bordered">
@@ -41,5 +46,30 @@
             </tr>
             </tbody>
         </table>
+<br><br><br><br>
+<br><br><br><br>
+<br><br><br><br>
+<br><br><br><br>
 </div>
+
+<div class="container col-12" id="add">
+   <form method="POST" class="form-signin" style="color:white">
+       {{ form.hidden_tag() }}
+       <h1 class="h4 font-weight-normal">
+           Add New Elective:
+       </h1>
+       <br>
+       {{ form.subject_code.label() }}:
+       {{ form.subject_code(class="form-control", placeholder="Subject Code") }}
+       <br>
+       {{ form.elective_name.label() }}:
+       {{ form.elective_name(class="form-control", placeholder="Elective Name") }}
+       <br>
+       {{ form.teacher_code.label() }}:
+       {{ form.teacher_code(class="form-control dropdown-toggle" , placeholder="None") }}
+       <br>
+       {{ form.submit(class="btn btn-success") }}
+   </form>
+</div>
+
 {% endblock %}

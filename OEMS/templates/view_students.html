@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}
+    Department:View Students
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-signin" style="color:white">
+            {{ form.hidden_tag() }}
+            <h1 class="h3 mb-3 font-weight-normal">
+                Welcome Department
+            </h1>
+            <br>
+            <br>
+            {{ form.subject.label() }}:
+            {{ form.subject(class="btn-default dropdown-toggle dropdown-toggle-split",style="width:40em;", placeholder="None") }}
+            {{ form.submit(class="btn btn-success") }}
+            <br>
+            <br>
+            {{ form.department.label() }}:
+            {{ form.department(class="btn-default dropdown-toggle dropdown-toggle-split",style="width:30em;", placeholder="None") }}
+        </form>
+    </div>
+    <br>
+    <br>
+    <br>
+    <br>
+<div class="row" style="margin-top:20px; margin-left:20px">
+   <div class="col-11">
+        <table class="table table-hover table-striped table-primary table-bordered">
+            <thead>
+            <tr>
+               <!-- Your Columns HERE -->
+               <th scope="col" class="col-2">USN</th>
+               <th scope="col" class="col-4">Name</th>
+               <th scope="col" class="col-2">Semester</th>
+               <th scope="col" class="col-2">Section</th>
+               <th scope="col" class="col-2">Department</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Your rows inside the table HERE: -->
+            <tr>
+               <td>A</td>
+               <td>B</td>
+               <td>C</td>
+               <td>C</td>
+               <td>D</td>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>B</td>
+                <td>C</td>
+                <td>C</td>
+                <td>D</td>
+            </tr>
+            </tbody>
+        </table>
+</div>
+</body>
+{% endblock %}
