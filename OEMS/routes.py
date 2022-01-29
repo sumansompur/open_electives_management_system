@@ -1,7 +1,7 @@
 from crypt import methods
 from OEMS import app
 from flask import render_template, redirect, url_for, flash, request
-from OEMS.forms import LoginForm, RegisterForm
+from OEMS.forms import LoginForm, RegisterForm, ViewStudentForm
 #from OEMS.models import Item, User
 #from OEMS.forms import RegisterForm, LoginForm, PurchaseItemForm, SellItemForm
 #from flask_login import login_user, logout_user, login_required, current_user
@@ -28,23 +28,73 @@ def register_page():
     return render_template('register.html', form=form)
 
 
+
+
+#DEPARTMENT ROUTES
 @app.route('/user/department')
 def department_page():
     return render_template('department.html')
 
+
+@app.route('/user/department/manage-electives')
+def manage_electives():
+    return render_template('dept_electives.html')
+
+
+@app.route('/user/department/manage-students')
+def manage_students():
+    return render_template('dept_students.html')
+
+
+@app.route('/user/department/manage-teachers')
+def manage_teachers():
+    return render_template('dept_teachers.html')
+
+
+@app.route('/user/department/view-students', methods=['GET', 'POST'])
+@app.route('/user/teacher', methods=['GET', 'POST'])
+def view_students():
+    form = ViewStudentForm()
+    return render_template('teacher.html', form=form)
+
+
+
+
+
+#STUDENT ROUTES
 @app.route('/user/student')
 def student_page():
     return render_template('student.html')
 
-@app.route('/user/teacher')
-def teacher_page():
-    return render_template('teacher.html')
 
+@app.route('/user/student/view_details')
+def view_student_elective():
+    return render_template('student_view_elective.html')
+
+
+@app.route('/user/student/change_details')
+def change_student_elective():
+    return render_template('student_change_elective.html')
+
+
+
+
+
+
+#ADMIN ROUTES
 @app.route('/user/admin')
 def admin_page():
     return render_template('admin.html')
 
 
+@app.route('/user/admin/manage-departments')
+def admin_manage_departments():
+    return render_template('admin_depts.html')
+    
+
+@app.route('/user/manage-users')
+def admin_manages_users():
+    return render_template('admin_users.html')
 
 
 

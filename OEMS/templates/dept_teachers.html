@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block title %}
+    Department:Teachers
+{% endblock %}
+{% block content %}
+
+<div class="row" style="margin-top:20px; margin-left:20px">
+   <div class="col-11">
+        <h3>Manage Students:</h3>
+        <br>
+        <br>
+        <table class="table table-hover table-dark table table-striped table-secondary table-bordered">
+            <thead>
+            <tr>
+               <!-- Your Columns HERE -->
+               <th scope="col" class="col-2">Teacher Code</th>
+               <th scope="col" class="col-4">Teacher Name</th>
+               <th scope="col" class="col-3">Options</th>
+            </tr>
+            </thead>
+            <tbody>
+            <!-- Your rows inside the table HERE: -->
+            <tr>
+               <td>A</td>
+               <td>C</td>
+               <td>
+                  <button class="btn btn-outline btn-info">Edit</button>
+                  <button class="btn btn-outline btn-success">Remove</button>
+               </td>
+            </tr>
+            <tr>
+                <td>A</td>
+                <td>B</td>
+                <td>
+                   <button class="btn btn-outline btn-info">Edit</button>
+                   <button class="btn btn-outline btn-success">Remove</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+</div>
+{% endblock %}
