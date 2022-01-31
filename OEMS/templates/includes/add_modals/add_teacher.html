@@ -17,12 +17,21 @@
         </div>
         <div class="modal-body">
           <!--Modal BODY HERE-->
-            Alpha Beta Gamma Sigma
+          <form method="POST" class="form-signin" style="color:white">
+            {{ form.hidden_tag() }}
+            <br>
+            {{ form.teacher_code.label() }}:
+            {{ form.teacher_code(class="form-control", placeholder="Teacher Code") }}
+            <br>
+            {{ form.teacher_name.label() }}:
+            {{ form.teacher_name(class="form-control", placeholder="Teacher Name") }}
+            <br>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          {{ form.submit(class="btn btn-primary") }}
         </div>
+      </form>
       </div>
     </div>
   </div>

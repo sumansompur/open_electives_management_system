@@ -43,22 +43,4 @@
         <br><br><br><br>
         <br><br><br><br>
 </div>
-
-<div class="container col-12" id="add">
-   <form method="POST" class="form-signin" style="color:white">
-       {{ form.hidden_tag() }}
-       <h1 class="h4 font-weight-normal">
-           Add New Student:
-       </h1>
-       <br>
-       {{ form.teacher_code.label() }}:
-       {{ form.teacher_code(class="form-control", placeholder="Teacher Code") }}
-       <br>
-       {{ form.teacher_name.label() }}:
-       {{ form.teacher_name(class="form-control", placeholder="Teacher Name") }}
-       <br>
-       {{ form.submit(class="btn btn-success") }}
-       
-   </form>
-</div>
 {% endblock %}

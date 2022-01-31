@@ -49,28 +49,4 @@
         <br><br><br><br>
         <br><br><br><br>
 </div>
-<div class="container col-12" id="add">
-   <form method="POST" class="form-signin" style="color:white">
-       {{ form.hidden_tag() }}
-       <h1 class="h4 font-weight-normal">
-           Add New Student:
-       </h1>
-       <br>
-       {{ form.usn.label() }}:
-       {{ form.usn(class="form-control", placeholder="USN") }}
-       <br>
-       {{ form.student_name.label() }}:
-       {{ form.student_name(class="form-control", placeholder="Student Name") }}
-       <br>
-       {{ form.semester.label() }}:
-       {{ form.semester(class="form-control", placeholder="Semester") }}
-       <br>
-       {{ form.section.label() }}:
-       {{ form.section(class="form-control", placeholder="Section") }}
-       <br>
-
-       {{ form.submit(class="btn btn-success") }}
-       
-   </form>
-</div>
 {% endblock %}
