@@ -3,12 +3,13 @@
     Department:Students
 {% endblock %}
 {% block content %}
+{% include 'includes/add_modals/add_student.html' %}
 
 <div class="row" style="margin-top:20px; margin-left:20px">
    <div class="col-11">
       <div class="row">
          <h3 scope="col" class="col-8">Manage Students:</h3>
-         <a scope="col" class="btn btn-success col-1" style="width: 15em;" href="#add">Add New Student</a>
+         <a scope="col" class="btn btn-success col-1" style="width: 15em;" data-toggle="modal" data-target="#add-student">Add New Student</a>
          &nbsp;&nbsp;&nbsp;
          <a scope="col" class="btn btn-info col-1" style="width: 15em;" href="{{ url_for('department_page') }}">Back</a>
       </div>
@@ -19,34 +20,28 @@
             <tr>
                <!-- Your Columns HERE -->
                <th scope="col" class="col-2">USN</th>
-               <th scope="col" class="col-4">Student Name</th>
+               <th scope="col" class="col-2">Student Name</th>
                <th scope="col" class="col-2">Semester</th>
                <th scope="col" class="col-2">Section</th>
+               <th scope="col" class="col-2">Subject Code</th>
                <th scope="col">Options</th>
             </tr>
             </thead>
             <tbody>
             <!-- Your rows inside the table HERE: -->
+            {% for data in query %}
             <tr>
-               <td>A</td>
-               <td>B</td>
-               <td>C</td>
-               <td>C</td>
-               <td>
-                  <button class="btn btn-outline btn-info">Edit</button>
-                  <button class="btn btn-outline btn-success">Remove</button>
-               </td>
+            <td>{{ data[0] }}</td>
+            <td>{{ data[1] }}</td>
+            <td>{{ data[2] }}</td>
+            <td>{{ data[3] }}</td>
+            <td>{{ data[4] }}</td>
+            <td>
+               <button class="btn btn-outline btn-info">Edit</button>
+               <button class="btn btn-outline btn-success">Remove</button>
+            </td>
             </tr>
-            <tr>
-                <td>A</td>
-                <td>B</td>
-                <td>C</td>
-                <td>C</td>
-                <td>
-                   <button class="btn btn-outline btn-info">Edit</button>
-                   <button class="btn btn-outline btn-success">Remove</button>
-                </td>
-            </tr>
+            {% endfor %}
             </tbody>
         </table>
         <br><br><br><br>

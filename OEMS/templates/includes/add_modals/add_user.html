@@ -1,0 +1,48 @@
+<!-- Modal -->
+<style>
+    .modal-content {
+      background-color: #3b3b3b
+    }
+</style>
+
+
+<div class="modal fade" id="add-user" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Add New User:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!--Modal BODY HERE-->
+          <form method="POST" class="form-signin" style="color:white">
+            {{ form.hidden_tag() }}
+            {{ form.user_id.label() }}
+            {{ form.user_id(class="form-control", placeholder="User ID. Enter your USN or Teacher code") }}
+            <br>
+            {{ form.username.label() }}
+            {{ form.username(class="form-control", placeholder="User Name") }}
+            <br>
+            {{ form.email_address.label() }}
+            {{ form.email_address(class="form-control", placeholder="Email Address") }}
+            <br>
+            {{ form.user_type.label() }}
+            {{ form.user_type(class="form-control") }}
+            <br>
+            {{ form.password1.label() }}
+            {{ form.password1(class="form-control form", placeholder="Password") }}
+            <br>
+            {{ form.password2.label() }}
+            {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+            <br>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>

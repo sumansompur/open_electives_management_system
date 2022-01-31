@@ -3,12 +3,13 @@
     Department:Teachers
 {% endblock %}
 {% block content %}
+{% include 'includes/add_modals/add_teacher.html' %}
 
 <div class="row" style="margin-top:20px; margin-left:20px">
    <div class="col-11">
       <div class="row">
          <h3 scope="col" class="col-8">Manage Teachers:</h3>
-         <a scope="col" class="btn btn-success col-1" style="width: 15em;" href="#add">Add New Teacher</a>
+         <a scope="col" class="btn btn-success col-1" style="width: 15em;" data-toggle="modal" data-target="#add-teacher">Add New Teacher</a>
          &nbsp;&nbsp;&nbsp;
          <a scope="col" class="btn btn-info col-1" style="width: 15em;" href="{{ url_for('department_page') }}">Back</a>
       </div>
@@ -25,22 +26,16 @@
             </thead>
             <tbody>
             <!-- Your rows inside the table HERE: -->
+            {% for data in query %}
             <tr>
-               <td>A</td>
-               <td>C</td>
-               <td>
-                  <button class="btn btn-outline btn-info">Edit</button>
-                  <button class="btn btn-outline btn-success">Remove</button>
-               </td>
+            <td>{{ data[0] }}</td>
+            <td>{{ data[1] }}</td>
+            <td>
+               <button class="btn btn-outline btn-info">Edit</button>
+               <button class="btn btn-outline btn-success">Remove</button>
+            </td>
             </tr>
-            <tr>
-                <td>A</td>
-                <td>B</td>
-                <td>
-                   <button class="btn btn-outline btn-info">Edit</button>
-                   <button class="btn btn-outline btn-success">Remove</button>
-                </td>
-            </tr>
+            {% endfor %}
             </tbody>
         </table>
         <br><br><br><br>

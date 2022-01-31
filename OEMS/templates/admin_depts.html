@@ -3,12 +3,13 @@
     Admin:Departments
 {% endblock %}
 {% block content %}
+{% include 'includes/add_modals/add_department.html' %}
 
 <div class="row" style="margin-top:20px; margin-left:20px">
    <div class="col-11">
       <div class="row">
          <h3 scope="col" class="col-8">Manage Departments:</h3>
-         <a scope="col" class="btn btn-success col-1" style="width: 15em;" href="#add">Add New Department</a>
+         <a scope="col" class="btn btn-success col-1" style="width: 15em;" data-toggle="modal" data-target="#add-department">Add New Department</a>
          &nbsp;&nbsp;&nbsp;
          <a scope="col" class="btn btn-info col-1" style="width: 15em;" href="{{ url_for('admin_page') }}">Back</a>
       </div>
@@ -25,22 +26,16 @@
             </thead>
             <tbody>
             <!-- Your rows inside the table HERE: -->
+            {% for data in query %}
             <tr>
-               <td>A</td>
-               <td>C</td>
-               <td>
-                  <button class="btn btn-outline btn-info">Edit</button>
-                  <button class="btn btn-outline btn-success">Remove</button>
-               </td>
+            <td>{{ data[0] }}</td>
+            <td>{{ data[1] }}</td>
+            <td>
+               <button class="btn btn-outline btn-info">Edit</button>
+               <button class="btn btn-outline btn-success">Remove</button>
+            </td>
             </tr>
-            <tr>
-                <td>A</td>
-                <td>B</td>
-                <td>
-                   <button class="btn btn-outline btn-info">Edit</button>
-                   <button class="btn btn-outline btn-success">Remove</button>
-                </td>
-            </tr>
+            {% endfor %}
             </tbody>
         </table>
         <br><br><br><br>
@@ -48,22 +43,4 @@
 <br><br><br><br>
 <br><br><br><br>
 </div>
-
-<div class="container col-12" id="add">
-   <form method="POST" class="form-signin" style="color:white">
-       {{ form.hidden_tag() }}
-       <h1 class="h4 font-weight-normal">
-           Add New Department:
-       </h1>
-       <br>
-       {{ form.department_code.label() }}:
-       {{ form.department_code(class="form-control", placeholder="Department Code") }}
-       <br>
-       {{ form.department_name.label() }}:
-       {{ form.department_name(class="form-control", placeholder="Department Name") }}
-       <br>
-       {{ form.submit(class="btn btn-success") }}
-   </form>
-</div>
-
 {% endblock %}

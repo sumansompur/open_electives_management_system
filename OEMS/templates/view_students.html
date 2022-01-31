@@ -8,9 +8,12 @@
     <div class="container">
         <form method="POST" class="form-signin" style="color:white">
             {{ form.hidden_tag() }}
-            <h1 class="h3 mb-3 font-weight-normal">
+            <h1 class="h1 mb-3 font-weight-normal">
                 Welcome Department
             </h1>
+            <div class="text-left">
+                <a scope="col" class="btn btn-info" style="width: 10em;" href="{{ url_for('department_page') }}">Go Back</a>
+             </div>
             <br>
             <br>
             {{ form.subject.label() }}:
@@ -18,8 +21,6 @@
             {{ form.submit(class="btn btn-success") }}
             <br>
             <br>
-            {{ form.department.label() }}:
-            {{ form.department(class="btn-default dropdown-toggle dropdown-toggle-split",style="width:30em;", placeholder="None") }}
         </form>
     </div>
     <br>
@@ -30,33 +31,45 @@
    <div class="col-11">
         <table class="table table-hover table-striped table-primary table-bordered">
             <thead>
-            <tr>
-               <!-- Your Columns HERE -->
-               <th scope="col" class="col-2">USN</th>
-               <th scope="col" class="col-4">Name</th>
-               <th scope="col" class="col-2">Semester</th>
-               <th scope="col" class="col-2">Section</th>
-               <th scope="col" class="col-2">Department</th>
-            </tr>
+                <tr>
+                    <!-- Your Columns HERE -->
+                    <th scope="col" class="col-2">USN</th>
+                    <th scope="col" class="col-2">Name</th>
+                    <th scope="col" class="col-2">Semester</th>
+                    <th scope="col" class="col-2">Section</th>
+                    <th scope="col" class="col-2">Subject Code</th>
+                    <th scope="col" class="col-2">Department</th>
+                </tr>
             </thead>
             <tbody>
-            <!-- Your rows inside the table HERE: -->
-            <tr>
-               <td>A</td>
-               <td>B</td>
-               <td>C</td>
-               <td>C</td>
-               <td>D</td>
-            </tr>
-            <tr>
-                <td>A</td>
-                <td>B</td>
-                <td>C</td>
-                <td>C</td>
-                <td>D</td>
-            </tr>
+                 <!-- Your rows inside the table HERE: -->
+                {% for data in query %}
+                    <tr>
+                    <td>{{ data[0] }}</td>
+                    <td>{{ data[1] }}</td>
+                    <td>{{ data[2] }}</td>
+                    <td>{{ data[3] }}</td>
+                    <td>{{ data[4] }}</td>
+                    <td>{{ data[5] }}</td>
+                    </tr>
+                {% endfor %}
             </tbody>
         </table>
 </div>
 </body>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        columns: [
+          null,
+          {orderable: false},
+          {orderable: false, searchable: false},
+          {orderable: false, searchable: false},
+          {orderable: true, searchable: false}],
+      });
+    });
+  </script>
 {% endblock %}
