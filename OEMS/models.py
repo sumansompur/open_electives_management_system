@@ -118,11 +118,11 @@ class Student:
 class Teacher:
     def __init__(self, teacher_code, tname, department_code):
         self.teacher_code = teacher_code
-        self.teacher_code = tname
+        self.tname = tname
         self.department_code = department_code
 
     def commit(self):
-        cursor.execute(f"insert into teacher values('{self.teacher_code}', '{self.teacher_code}', '{self.department_code}')")
+        cursor.execute(f"insert into teacher values('{self.teacher_code}', '{self.tname}', '{self.department_code}')")
         db.commit()
     
     def check_if_teacher_exists(teacher_code_to_check):
