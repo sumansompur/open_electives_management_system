@@ -1,8 +1,11 @@
+from crypt import methods
 from random import choice
 from time import sleep
+
+from sqlalchemy import delete
 from OEMS import app
-from flask import render_template, redirect, url_for, flash, request
-from OEMS.forms import AddUserForm, AddDepartmentForm, AddTeacherForm, AddStudentForm, DeleteForm, EditForm, LoginForm, RegisterForm, ViewStudentForm, ViewStudentFormDept, AddElectiveForm
+from flask import jsonify, render_template, redirect, url_for, flash, request
+from OEMS.forms import AddUserForm, AddDepartmentForm, AddTeacherForm, AddStudentForm, DeleteForm, EditForm, LoginForm, RegisterForm, SelectElective, ViewStudentForm, ViewStudentFormDept, AddElectiveForm
 from OEMS.forms import FilterUserForm
 from OEMS.models import Department, Elective, Student, Teacher, User
 from OEMS import db, cursor
@@ -92,7 +95,7 @@ def manage_electives():
         sub_query = cursor.fetchall()
         teachers = [item for item in sub_query]
         form.teacher_code.choices = teachers
-        if form.validate_on_submit():
+        if form.validate_on_submit() and form.submit.data:
             choice = form.teacher_code.data
             choice = choice.strip('()').split(',')
             elective = Elective(form.subject_code.data, form.elective_name.data, current_user.user_id, choice[0])
@@ -100,17 +103,26 @@ def manage_electives():
             flash(f"Elective added successfully!", category='success')
             return redirect(url_for('manage_electives'))
         
-        if deleteForm.validate_on_submit():
+        elif deleteForm.validate_on_submit() and deleteForm.delete.data:
             subject_code = request.form.get('deleted_item')
             Elective.delete(subject_code, current_user.user_id)
             flash(f'Elective: {subject_code} deleted successfully', category='warning')
             return redirect(url_for('manage_electives'))
-        
+
+        elif editForm.validate_on_submit() and editForm.edit.data:
+            subcode = request.form.get('subcode')
+            ename = request.form.get('ename')
+            teacher_code = request.form.get('teacher_code')
+            teacher_code = teacher_code.strip('()').split(',')
+            Elective.update(subcode, ename, teacher_code[0])
+            flash(f"Update Successful!", category='info')
+            return redirect(url_for('manage_electives'))  
+
         if form.errors != {}: #If there are not errors from the validations
             for err_msg in form.errors.values():
                 flash(f'There was an error with adding elective: {err_msg}', category='danger')
         
-        return render_template('dept_electives.html', form=form, query=result, deleteForm=deleteForm, editForm=editForm)
+        return render_template('dept_electives.html', form=form, query=result, deleteForm=deleteForm, editForm=editForm, list=teachers)
     else:
         return redirect(url_for('user_routing'))
 
@@ -124,15 +136,23 @@ def manage_students():
         form = AddStudentForm()
         deleteForm = DeleteForm()
         editForm = EditForm()
-        if form.validate_on_submit():
+        if form.validate_on_submit() and form.submit.data:
             student = Student(form.usn.data, form.student_name.data, form.semester.data, form.section.data, current_user.user_id)
             student.commit()
             flash(f"Student Added Successfully!", category='success')
             return redirect(url_for('manage_students'))
-        if deleteForm.validate_on_submit():
+        elif deleteForm.validate_on_submit() and deleteForm.delete.data:
             code = request.form.get('deleted_item')
             Student.delete(code)
             flash(f'Student: {code} deleted successfully', category='warning')
+            return redirect(url_for('manage_students'))
+        elif editForm.validate_on_submit() and editForm.edit.data:
+            usn = request.form.get('usn')
+            sname = request.form.get('sname')
+            semester = request.form.get('semester')
+            section = request.form.get('section')
+            Student.update(usn, sname, semester, section)
+            flash(f"Update Successful!", category='info')
             return redirect(url_for('manage_students'))
 
         if form.errors != {}: #If there are not errors from the validations
@@ -153,15 +173,21 @@ def manage_teachers():
         form = AddTeacherForm()
         deleteForm = DeleteForm()
         editForm = EditForm()
-        if form.validate_on_submit():
+        if form.validate_on_submit() and form.submit.data:
             teacher = Teacher(form.teacher_code.data, form.teacher_name.data, current_user.user_id)
             teacher.commit()
             flash(f"Teacher Added Successfully!", category='success')
             return redirect(url_for('manage_teachers'))
-        if deleteForm.validate_on_submit():
+        elif deleteForm.validate_on_submit() and deleteForm.delete.data:
             code = request.form.get('deleted_item')
             Teacher.delete(code)
             flash(f'Teacher: {code} deleted successfully', category='warning')
+            return redirect(url_for('manage_teachers'))
+        elif editForm.validate_on_submit() and editForm.edit.data:
+            teacher_code = request.form.get('teacher_code')
+            tname = request.form.get('tname')
+            Teacher.update(teacher_code, tname)
+            flash(f"Update Successful!", category='info')
             return redirect(url_for('manage_teachers'))
 
         if form.errors != {}: #If there are not errors from the validations
@@ -334,13 +360,37 @@ def view_students():
 
 
 #STUDENT ROUTES
-@app.route('/user/student/')
+@app.route('/user/student/', methods=['GET', 'POST'])
 @login_required
 def student_page():
     if current_user.user_privileges == 'Student':
-        return render_template('student.html')
+        student = Student.check_if_student_exists(current_user.user_id)
+        form = SelectElective()
+        cursor.execute(f"select department_code from department where department_code<>'{student.department_code}'")
+        result = cursor.fetchall()
+        result = [item[0] for item in result]
+
+        form.department.choices = result
+        print(result)
+        return render_template('student.html', data=student, form=form)
     else:
         return redirect(url_for('user_routing'))
+
+@app.route('/user/student/ele/<department>')
+@login_required
+def dept(department):
+    cursor.execute(f"select subject_code, elective_name from open_elective where department_code='{department}'")
+    result = cursor.fetchall()
+    result = [item for item in result]
+
+    array = []
+    for item in result:
+        obj = {}
+        obj['id'] = item[0]
+        obj['name'] = item[1]
+        array.append(obj)
+    
+    return jsonify({'subs' : array})
     
 
 

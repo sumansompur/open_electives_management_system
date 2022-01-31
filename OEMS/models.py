@@ -114,8 +114,12 @@ class Elective:
 
     def delete(subject_code, department_code):
         cursor.execute(f"delete from open_elective where subject_code='{subject_code}' and department_code='{department_code}'")
-        db.commit()    
-    
+        db.commit()  
+
+    def update(subcode, ename, teacher_code):  
+        cursor.execute(f"update open_elective set elective_name='{ename}', teacher_code={teacher_code} where subject_code='{subcode}'")
+        db.commit()
+
 class Student:
     def __init__(self, usn, sname, semester, section, department_code):
         self.usn = usn
@@ -139,6 +143,10 @@ class Student:
     def delete(usn):
         cursor.execute(f"delete from student where usn='{usn}'")
         db.commit()
+    
+    def update(usn, sname, semester, section):
+        cursor.execute(f"update student set sname='{sname}', semester={semester}, section='{section}' where usn='{usn}'")
+        db.commit()
 
 class Teacher:
     def __init__(self, teacher_code, tname, department_code):
@@ -160,7 +168,11 @@ class Teacher:
 
     def delete(teacher_code):
         cursor.execute(f"delete from teacher where teacher_code='{teacher_code}'")
-        db.commit()       
+        db.commit()  
+
+    def update(teacher_code, new_name):
+        cursor.execute(f"update teacher set tname='{new_name}' where teacher_code='{teacher_code}'")
+        db.commit()
         
 
 

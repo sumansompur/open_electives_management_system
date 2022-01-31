@@ -1,0 +1,42 @@
+<!-- Modal -->
+<style>
+    .modal-content {
+      background-color: #3b3b3b
+    }
+</style>
+
+
+<div class="modal fade" id="edit-{{ data[0] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Elective {{ data[0] }}:</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <!--Modal BODY HERE-->
+          <form method="POST" class="form-signin" style="color:white">
+            {{ editForm.hidden_tag() }}
+            <label for="subcode">Subject Code:</label>
+            <input id="subcode" name="subcode" type="text" class="form-control" value="{{ data[0] }}" readonly>
+            <br>
+            <label for="ename">Elective Name:</label>
+            <input id="ename" name="ename" type="text" class="form-control" value="{{ data[1] }}">
+            <br>
+            <label for="teacher_code">Elective Name:</label>
+            <select id="teacher_code" name="teacher_code" required>
+              {% for x in list %}
+              <option value="{{ x }}">{{ x }}</option>
+              {% endfor %}
+            </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          {{ editForm.edit(class="btn btn-info") }}
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>

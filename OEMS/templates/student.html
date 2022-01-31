@@ -5,13 +5,91 @@
 {% block content %}
     <div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-dark" style="color:white">
         <div class="col-md-5 p-lg-5 mx-auto my-5">
-            <h1 class="display-6 font-weight-normal">Welcome USN</h1>
+            <h1 class="display-6 font-weight-normal">Welcome {{ current_user.user_id }}</h1>
             <br>
             <br>
-            <a class="btn btn-primary" href="#">View details of elective</a>
-            <a class="btn btn-primary" href="#">Register/Change elective</a>
+            <a class="btn btn-primary" data-toggle="modal" data-target="#student_details">View details of elective</a>
+            <a class="btn btn-primary" data-toggle="modal" data-target="#change_elective">Register/Change elective</a>
         </div>
         <div class="product-device box-shadow d-none d-md-block"></div>
         <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
     </div>
+
+
+    <div class="modal fade" id="student_details" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Student Details:</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+                <h1 class="lead">
+                USN: {{ data.usn }} <br><br>
+                Student Name: {{ data.sname }} <br><br>
+                Semester: {{ data.semester }} <br><br>
+                Section: {{ data.section }} <br><br>
+                Department:  {{ data.department_code }} <br><br>
+                </h1>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="modal fade" id="change_elective" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLongTitle">Change Elective:</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+            <form>
+            {{ form.hidden_tag() }}
+            {{ form.department.label() }}:
+            {{ form.department(class="form-control", placeholder="Department") }}
+            <br>
+            {{ form.elective.label() }}:
+            {{ form.elective(class="form-control", placeholder="Elective") }}
+            <br>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              {{ form.submit(class="btn btn-info") }}
+            </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <style>
+        .modal-content {
+          background-color: #3b3b3b
+        }
+    </style>
+    <script>
+      let dept_select = document.getElementById('department');
+      let subject_select = document.getElementById('elective');
+      dept_select.onchange = function() {
+        dept = dept_select.value;
+        fetch('/ele/' + dept).then(function(data) {
+          response.json().then(function(data) {
+            let optionHTML = '';
+            
+            for (let subject of data.subs) {
+              optionHTML += '<option value="' + subject.id + '">' + subject.name + '</option>';
+            }
+
+            subject_select.innerHTML = optionHTML;
+
+          });
+        });
+      }
+    </script>
 {% endblock %}

@@ -1,8 +1,8 @@
 from cgitb import reset
 from typing import Any
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField
-from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
+from wtforms import IntegerField, StringField, PasswordField, SubmitField, HiddenField, SelectField
+from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError, NumberRange
 from OEMS.models import Elective, Student, Teacher, User, Department
 from OEMS import db, cursor
 
@@ -72,7 +72,7 @@ class AddStudentForm(FlaskForm):
 
     usn = StringField(label='USN', validators=[DataRequired(), Length(min=10, max=10)])
     student_name = StringField(label='Student Name', validators=[DataRequired()])
-    semester = StringField(label='Semester', validators=[DataRequired()])
+    semester = IntegerField(label='Semester', validators=[DataRequired(), NumberRange(min=1, max=8)])
     section = StringField(label='Section', validators=[DataRequired()])
     submit = SubmitField(label='Add Student')
 
@@ -142,3 +142,8 @@ class DeleteForm(FlaskForm):
 
 class EditForm(FlaskForm):
     edit = SubmitField(label='Edit')
+
+class SelectElective(FlaskForm):
+    department = SelectField(label='Select Department', choices=[], validators=[DataRequired()])
+    elective = SelectField(label='Select Elective', choices=[], validators=[DataRequired()])
+    submit = SubmitField(label='Change Elective')
