@@ -364,15 +364,27 @@ def view_students():
 @login_required
 def student_page():
     if current_user.user_privileges == 'Student':
+        cursor.execute(f"select o.subject_code, o.elective_name from student s, open_elective o where s.usn='{current_user.user_id}' and s.subject_code=o.subject_code")
+        data1 = cursor.fetchall()
         student = Student.check_if_student_exists(current_user.user_id)
         form = SelectElective()
         cursor.execute(f"select department_code from department where department_code<>'{student.department_code}'")
         result = cursor.fetchall()
         result = [item[0] for item in result]
+        form.department.choices += result
+        cursor.execute(f"select subject_code, elective_name from open_elective where department_code='{result[0]}'")
+        electives = cursor.fetchall()
+        electives = [(item[0], item[0] + '-' + item[1]) for item in electives]
+        form.elective.choices += electives
 
-        form.department.choices = result
-        print(result)
-        return render_template('student.html', data=student, form=form)
+        if request.method=='POST':
+            print(form.elective.data)
+            cursor.execute(f"update student set subject_code='{form.elective.data}' where usn='{current_user.user_id}'")
+            db.commit()
+            flash("Changed elective Successfully!", category='warning')
+            return redirect(url_for('student_page'))
+        
+        return render_template('student.html', data=student, form=form, data1=data1)
     else:
         return redirect(url_for('user_routing'))
 

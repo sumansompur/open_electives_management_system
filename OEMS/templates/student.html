@@ -32,6 +32,8 @@
                 Semester: {{ data.semester }} <br><br>
                 Section: {{ data.section }} <br><br>
                 Department:  {{ data.department_code }} <br><br>
+                Elective Code: {{ data1[0][0] }} <br><br>
+                Elective Name: {{ data1[0][1] }} <br>
                 </h1>
             </div>
             <div class="modal-footer">
@@ -51,7 +53,7 @@
               </button>
             </div>
             <div class="modal-body">
-            <form>
+            <form method="POST">
             {{ form.hidden_tag() }}
             {{ form.department.label() }}:
             {{ form.department(class="form-control", placeholder="Department") }}
@@ -78,12 +80,12 @@
       let subject_select = document.getElementById('elective');
       dept_select.onchange = function() {
         dept = dept_select.value;
-        fetch('/ele/' + dept).then(function(data) {
+        fetch('/user/student/ele/' + dept).then(function(response) {
           response.json().then(function(data) {
             let optionHTML = '';
             
             for (let subject of data.subs) {
-              optionHTML += '<option value="' + subject.id + '">' + subject.name + '</option>';
+              optionHTML += '<option value="' + subject.id + '">' + subject.id + "-" +subject.name + '</option>';
             }
 
             subject_select.innerHTML = optionHTML;
