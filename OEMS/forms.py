@@ -136,3 +136,9 @@ class AddUserForm(FlaskForm):
 class FilterUserForm(FlaskForm):
     subject = SelectField(label='Select Privileges', choices=['All', 'Student', 'Teacher', 'Department', 'Admin'], validators=[DataRequired()])
     submit = SubmitField(label='Display Students')
+
+class DeleteForm(FlaskForm):
+    delete = SubmitField(label='Remove')
+
+class EditForm(FlaskForm):
+    edit = SubmitField(label='Edit')

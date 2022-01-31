@@ -6,11 +6,11 @@
 </style>
 
 
-<div class="modal fade" id="delete-department-{{  }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="edit-{{ data[0] }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add New Department:</h5>
+          <h5 class="modal-title" id="exampleModalLongTitle">Edit Department {{ data[0] }}:</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -18,17 +18,17 @@
         <div class="modal-body">
           <!--Modal BODY HERE-->
           <form method="POST" class="form-signin" style="color:white">
-            {{ form.hidden_tag() }}
-            {{ form.department_code.label() }}:
-            {{ form.department_code(class="form-control", placeholder="Department Code") }}
+            {{ editForm.hidden_tag() }}
+            <label for="department_code">Department Code:</label>
+            <input id="department_code" name="department_code" type="text" class="form-control" value="{{ data[0] }}" readonly>
             <br>
-            {{ form.department_name.label() }}:
-            {{ form.department_name(class="form-control", placeholder="Department Name") }}
+            <label for="department_name">Department Name:</label>
+            <input id="department_name" name="department_name" type="text" class="form-control" value="{{ data[1] }}">
             <br>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          {{ form.submit(class="btn btn-primary") }}
+          {{ editForm.edit(class="btn btn-info") }}
         </div>
       </form>
       </div>

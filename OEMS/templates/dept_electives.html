@@ -29,14 +29,15 @@
             <tbody>
             <!-- Your rows inside the table HERE: -->
             {% for data in query %}
+            {% include 'includes/delete_edit_modals/delete.html' %}
             <tr>
             <td>{{ data[0] }}</td>
             <td>{{ data[1] }}</td>
             <td>{{ data[3] }}</td>
             <td>{{ data[4] }}</td>
             <td>
-               <button class="btn btn-outline btn-info">Edit</button>
-               <button class="btn btn-outline btn-success">Remove</button>
+               <button class="btn btn-outline btn-info"  data-toggle="modal" data-target="#">Edit</button>
+               <button class="btn btn-outline btn-danger" data-toggle="modal" data-target="#delete-{{ data[0] }}">Remove</button>
             </td>
             </tr>
             {% endfor %}

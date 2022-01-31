@@ -1,3 +1,4 @@
+from flask import flash
 from OEMS import login_manager
 from OEMS import bcrypt
 from flask_login import UserMixin, current_user
@@ -55,6 +56,14 @@ class User(UserMixin):
         cursor.execute(f"insert into users values('{self.user_id}', '{self.user_name}', '{self.email}', '{self.password_hash}', '{self.user_privileges}')")
         db.commit()
     
+    def delete(user_id, current_user_id):
+        if current_user_id != user_id:
+            cursor.execute(f"delete from users where user_id='{user_id}'")
+            db.commit()
+            return 'success'
+        else:
+            return 'failure'
+    
     def get_id(self):
         return self.user_id
         
@@ -74,7 +83,15 @@ class Department:
             return Department(result[0][0], result[0][1])
         else:
             return None
-           
+
+    def delete(department_code):
+        cursor.execute(f"delete from department where department_code='{department_code}'")
+        db.commit()
+    
+    def update(department_code, department_name):
+        cursor.execute(f"update department set department_name='{department_name}' where department_code='{department_code}'")
+        db.commit()
+
 class Elective:
     def __init__(self, subject_code, elective_name, department_code, teacher_code):
         self.subject_code = subject_code
@@ -95,6 +112,10 @@ class Elective:
         else:
             return None
 
+    def delete(subject_code, department_code):
+        cursor.execute(f"delete from open_elective where subject_code='{subject_code}' and department_code='{department_code}'")
+        db.commit()    
+    
 class Student:
     def __init__(self, usn, sname, semester, section, department_code):
         self.usn = usn
@@ -114,6 +135,10 @@ class Student:
             return Student(result[0][0], result[0][1], result[0][2], result[0][3], result[0][4])
         else:
             return None
+    
+    def delete(usn):
+        cursor.execute(f"delete from student where usn='{usn}'")
+        db.commit()
 
 class Teacher:
     def __init__(self, teacher_code, tname, department_code):
@@ -131,7 +156,11 @@ class Teacher:
         if result != []:
             return Teacher(result[0][0], result[0][1], result[0][2])
         else:
-            return None    
+            return None
+
+    def delete(teacher_code):
+        cursor.execute(f"delete from teacher where teacher_code='{teacher_code}'")
+        db.commit()       
         
 
 

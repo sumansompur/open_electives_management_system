@@ -2,7 +2,7 @@ from random import choice
 from time import sleep
 from OEMS import app
 from flask import render_template, redirect, url_for, flash, request
-from OEMS.forms import AddUserForm, AddDepartmentForm, AddTeacherForm, AddStudentForm, LoginForm, RegisterForm, ViewStudentForm, ViewStudentFormDept, AddElectiveForm
+from OEMS.forms import AddUserForm, AddDepartmentForm, AddTeacherForm, AddStudentForm, DeleteForm, EditForm, LoginForm, RegisterForm, ViewStudentForm, ViewStudentFormDept, AddElectiveForm
 from OEMS.forms import FilterUserForm
 from OEMS.models import Department, Elective, Student, Teacher, User
 from OEMS import db, cursor
@@ -86,10 +86,12 @@ def manage_electives():
         cursor.execute(f"select o.*, t.tname from open_elective as o, teacher t where o.department_code='{current_user.user_id}' and t.teacher_code=o.teacher_code order by subject_code")
         result = cursor.fetchall()
         form=AddElectiveForm()
+        deleteForm = DeleteForm()
+        editForm = EditForm()
         cursor.execute(f"select t.teacher_code, t.tname from teacher t where department_code='{current_user.user_id}'")
         sub_query = cursor.fetchall()
         teachers = [item for item in sub_query]
-        form.teacher_code.choices += teachers
+        form.teacher_code.choices = teachers
         if form.validate_on_submit():
             choice = form.teacher_code.data
             choice = choice.strip('()').split(',')
@@ -98,11 +100,17 @@ def manage_electives():
             flash(f"Elective added successfully!", category='success')
             return redirect(url_for('manage_electives'))
         
+        if deleteForm.validate_on_submit():
+            subject_code = request.form.get('deleted_item')
+            Elective.delete(subject_code, current_user.user_id)
+            flash(f'Elective: {subject_code} deleted successfully', category='warning')
+            return redirect(url_for('manage_electives'))
+        
         if form.errors != {}: #If there are not errors from the validations
             for err_msg in form.errors.values():
-                flash(f'There was an error with creating a user: {err_msg}', category='danger')
-
-        return render_template('dept_electives.html', form=form, query=result)
+                flash(f'There was an error with adding elective: {err_msg}', category='danger')
+        
+        return render_template('dept_electives.html', form=form, query=result, deleteForm=deleteForm, editForm=editForm)
     else:
         return redirect(url_for('user_routing'))
 
@@ -114,17 +122,24 @@ def manage_students():
         cursor.execute(f"select * from student where department_code='{current_user.user_id}' order by usn")
         result = cursor.fetchall()
         form = AddStudentForm()
+        deleteForm = DeleteForm()
+        editForm = EditForm()
         if form.validate_on_submit():
             student = Student(form.usn.data, form.student_name.data, form.semester.data, form.section.data, current_user.user_id)
             student.commit()
             flash(f"Student Added Successfully!", category='success')
             return redirect(url_for('manage_students'))
+        if deleteForm.validate_on_submit():
+            code = request.form.get('deleted_item')
+            Student.delete(code)
+            flash(f'Student: {code} deleted successfully', category='warning')
+            return redirect(url_for('manage_students'))
 
         if form.errors != {}: #If there are not errors from the validations
             for err_msg in form.errors.values():
                 flash(f'There was an error with creating a user: {err_msg}', category='danger')
-
-        return render_template('dept_students.html', form=form, query=result)
+        
+        return render_template('dept_students.html', form=form, query=result, deleteForm=deleteForm, editForm=editForm)
     else:
         return redirect(url_for('user_routing'))
 
@@ -136,17 +151,23 @@ def manage_teachers():
         cursor.execute(f"select t.teacher_code, t.tname from teacher t where t.department_code='{current_user.user_id}' order by teacher_code")
         result = cursor.fetchall()
         form = AddTeacherForm()
+        deleteForm = DeleteForm()
+        editForm = EditForm()
         if form.validate_on_submit():
             teacher = Teacher(form.teacher_code.data, form.teacher_name.data, current_user.user_id)
             teacher.commit()
             flash(f"Teacher Added Successfully!", category='success')
             return redirect(url_for('manage_teachers'))
+        if deleteForm.validate_on_submit():
+            code = request.form.get('deleted_item')
+            Teacher.delete(code)
+            flash(f'Teacher: {code} deleted successfully', category='warning')
+            return redirect(url_for('manage_teachers'))
 
         if form.errors != {}: #If there are not errors from the validations
             for err_msg in form.errors.values():
                 flash(f'There was an error with creating a user: {err_msg}', category='danger')
-
-        return render_template('dept_teachers.html', form=form, query=result)
+        return render_template('dept_teachers.html', form=form, query=result, deleteForm=deleteForm, editForm=editForm)
     else:
         return redirect(url_for('user_routing'))
 
@@ -185,23 +206,6 @@ def dept_view_students():
 
 
 
-
-#STUDENT ROUTES
-@app.route('/user/student/')
-@login_required
-def student_page():
-    if current_user.user_privileges == 'Student':
-        return render_template('student.html')
-    else:
-        return redirect(url_for('user_routing'))
-    
-
-
-
-
-
-
-
 #ADMIN ROUTES
 @app.route('/user/admin/')
 @login_required
@@ -219,17 +223,34 @@ def admin_manage_departments():
         cursor.execute(f"select * from department")
         result = cursor.fetchall()
         form=AddDepartmentForm()
-        if form.validate_on_submit():
+        deleteForm = DeleteForm()
+        editForm = EditForm()
+
+        if form.validate_on_submit() and form.submit.data:
             department = Department(form.department_code.data, form.department_name.data)
             department.commit()
             flash(f"Department created successfully!", category='success')
             return redirect(url_for('admin_manage_departments'))
 
-        if form.errors != {}: #If there are not errors from the validations
+        elif deleteForm.validate_on_submit() and deleteForm.delete.data:
+            code = request.form.get('deleted_item')
+            Department.delete(code)
+            flash(f'Department {code} deleted successfully', category='warning')
+            return redirect(url_for('admin_manage_departments'))
+
+        elif editForm.validate_on_submit() and editForm.edit.data:
+            department_code = request.form.get('department_code')
+            department_name = request.form.get('department_name')
+            print(department_code, department_name)
+            Department.update(department_code, department_name)
+            flash(f"Update Successful!", category='info')
+            return redirect(url_for('admin_manage_departments'))
+
+        if form.errors != {}: 
             for err_msg in form.errors.values():
                 flash(f'There was an error with creating a user: {err_msg}', category='danger') 
-          
-        return render_template('admin_depts.html', form=form, query=result)
+
+        return render_template('admin_depts.html', form=form, query=result, deleteForm=deleteForm, editForm=editForm)
     else:
         return redirect(url_for('user_routing'))
     
@@ -241,7 +262,8 @@ def admin_manages_users():
         cursor.execute(f"select u.user_id, u.user_name, u.email, u.user_privileges from users as u")
         result = cursor.fetchall()
         filter = FilterUserForm()
-
+        deleteForm = DeleteForm()
+        
         form=AddUserForm()
         if filter.validate_on_submit():
             if filter.subject.data != 'All':
@@ -254,19 +276,25 @@ def admin_manages_users():
                 cursor.execute(f"select u.user_id, u.user_name, u.email, u.user_privileges from users as u")
                 result = cursor.fetchall()
                 print(result)
-            return render_template('admin_users.html', form=form, query=result, filter=filter)
+            return render_template('admin_users.html', form=form, query=result, filter=filter, deleteForm=deleteForm)
 
         if form.validate_on_submit():
             user_to_create = User(form.user_id.data, form.username.data, form.email_address.data, user_privileges=form.user_type.data, password_hash=form.password1.data)
             user_to_create.commit()
             flash(f"User created successfully!", category='success')
             return redirect(url_for('admin_manages_users'))
+        
+        if deleteForm.validate_on_submit():
+            code = request.form.get('deleted_item')
+            User.delete(code, current_user.user_id)
+            flash(f'User: {code} deleted successfully', category='warning')
+            return redirect(url_for('admin_manages_users'))
 
         if form.errors != {}: #If there are not errors from the validations
             for err_msg in form.errors.values():
                 flash(f'There was an error with creating a user: {err_msg}', category='danger') 
             
-        return render_template('admin_users.html', form=form, query=result, filter=filter)
+        return render_template('admin_users.html', form=form, query=result, filter=filter, deleteForm=deleteForm)
     else:
         return redirect(url_for('user_routing'))
 
@@ -305,6 +333,15 @@ def view_students():
         return redirect(url_for('user_routing'))
 
 
+#STUDENT ROUTES
+@app.route('/user/student/')
+@login_required
+def student_page():
+    if current_user.user_privileges == 'Student':
+        return render_template('student.html')
+    else:
+        return redirect(url_for('user_routing'))
+    
 
 
 
