@@ -1,8 +1,9 @@
+from cgitb import reset
 from typing import Any
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField
 from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
-from OEMS.models import User, Department
+from OEMS.models import Elective, Student, Teacher, User, Department
 from OEMS import db, cursor
 
 class LoginForm(FlaskForm):
@@ -52,20 +53,22 @@ class ViewStudentFormDept(FlaskForm):
 
 
 class AddElectiveForm(FlaskForm):
-    def validate_teacher_code(self, tcode_to_check):
-        if tcode_to_check == ('None', 'None'):
-            raise ValidationError('Select a subject to view students assigned')
+    def validate_subject_code(self, ecode_to_check):
+        result = Elective.check_if_elective_exists(ecode_to_check.data)
+        if result != None:
+            raise ValidationError("Elective already exists!")
 
-    subject_code = StringField(label='Subject Code', validators=[DataRequired(), Length(min=10, max=10)])
+    subject_code = StringField(label='Subject Code', validators=[DataRequired(), Length(min=6, max=10)])
     elective_name = StringField(label='Elective Name', validators=[DataRequired()])
-    teacher_code = SelectField(label='Teacher Code', choices=[('None', 'None')]+[], validators=[DataRequired()])
+    teacher_code = SelectField(label='Teacher Code', choices=[], validators=[DataRequired()])
     submit = SubmitField(label='Add Elective')
 
 
 class AddStudentForm(FlaskForm):
-    def validate_teacher_code(self, tcode_to_check):
-        if tcode_to_check == ('None', 'None'):
-            raise ValidationError('Select a subject to view students assigned')
+    def validate_usn(self, usn_to_check):
+        result = Student.check_if_student_exists(usn_to_check.data)
+        if result != None:
+            raise ValidationError("Student USN already exists!")
 
     usn = StringField(label='USN', validators=[DataRequired(), Length(min=10, max=10)])
     student_name = StringField(label='Student Name', validators=[DataRequired()])
@@ -75,7 +78,11 @@ class AddStudentForm(FlaskForm):
 
 
 class AddTeacherForm(FlaskForm):
-
+    def validate_teacher_code(self, tcode_to_check):
+        result = Teacher.check_if_teacher_exists(tcode_to_check.data)
+        if result != None:
+            raise ValidationError("Teacher already exists!")
+    
     teacher_code = StringField(label='Teacher Code', validators=[DataRequired()])
     teacher_name = StringField(label='Teacher Name', validators=[DataRequired()])
     submit = SubmitField(label='Add Teacher')
@@ -85,7 +92,7 @@ class AddDepartmentForm(FlaskForm):
     def validate_department_code(self, code_to_check):
         result = Department.check_if_department_exists(code_to_check.data)
         if result != None:
-            raise ValidationError('Department already exists')
+            raise ValidationError('Department already exists!')
 
     department_code = StringField(label='Department Code', validators=[DataRequired()])
     department_name = StringField(label='Department Name', validators=[DataRequired()])

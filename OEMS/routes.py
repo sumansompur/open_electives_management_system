@@ -4,7 +4,7 @@ from OEMS import app
 from flask import render_template, redirect, url_for, flash, request
 from OEMS.forms import AddUserForm, AddDepartmentForm, AddTeacherForm, AddStudentForm, LoginForm, RegisterForm, ViewStudentForm, ViewStudentFormDept, AddElectiveForm
 from OEMS.forms import FilterUserForm
-from OEMS.models import Department, User
+from OEMS.models import Department, Elective, Student, Teacher, User
 from OEMS import db, cursor
 from flask_login import login_user, logout_user, login_required, current_user
 
@@ -86,6 +86,22 @@ def manage_electives():
         cursor.execute(f"select o.*, t.tname from open_elective as o, teacher t where o.department_code='{current_user.user_id}' and t.teacher_code=o.teacher_code order by subject_code")
         result = cursor.fetchall()
         form=AddElectiveForm()
+        cursor.execute(f"select t.teacher_code, t.tname from teacher t where department_code='{current_user.user_id}'")
+        sub_query = cursor.fetchall()
+        teachers = [item for item in sub_query]
+        form.teacher_code.choices += teachers
+        if form.validate_on_submit():
+            choice = form.teacher_code.data
+            choice = choice.strip('()').split(',')
+            elective = Elective(form.subject_code.data, form.elective_name.data, current_user.user_id, choice[0])
+            elective.commit()
+            flash(f"Elective added successfully!", category='success')
+            return redirect(url_for('manage_electives'))
+        
+        if form.errors != {}: #If there are not errors from the validations
+            for err_msg in form.errors.values():
+                flash(f'There was an error with creating a user: {err_msg}', category='danger')
+
         return render_template('dept_electives.html', form=form, query=result)
     else:
         return redirect(url_for('user_routing'))
@@ -98,6 +114,16 @@ def manage_students():
         cursor.execute(f"select * from student where department_code='{current_user.user_id}' order by usn")
         result = cursor.fetchall()
         form = AddStudentForm()
+        if form.validate_on_submit():
+            student = Student(form.usn.data, form.student_name.data, form.semester.data, form.section.data, current_user.user_id)
+            student.commit()
+            flash(f"Student Added Successfully!", category='success')
+            return redirect(url_for('manage_students'))
+
+        if form.errors != {}: #If there are not errors from the validations
+            for err_msg in form.errors.values():
+                flash(f'There was an error with creating a user: {err_msg}', category='danger')
+
         return render_template('dept_students.html', form=form, query=result)
     else:
         return redirect(url_for('user_routing'))
@@ -110,6 +136,16 @@ def manage_teachers():
         cursor.execute(f"select t.teacher_code, t.tname from teacher t where t.department_code='{current_user.user_id}' order by teacher_code")
         result = cursor.fetchall()
         form = AddTeacherForm()
+        if form.validate_on_submit():
+            teacher = Teacher(form.teacher_code.data, form.teacher_name.data, current_user.user_id)
+            teacher.commit()
+            flash(f"Teacher Added Successfully!", category='success')
+            return redirect(url_for('manage_teachers'))
+
+        if form.errors != {}: #If there are not errors from the validations
+            for err_msg in form.errors.values():
+                flash(f'There was an error with creating a user: {err_msg}', category='danger')
+
         return render_template('dept_teachers.html', form=form, query=result)
     else:
         return redirect(url_for('user_routing'))
