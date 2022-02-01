@@ -1,15 +1,17 @@
-from crypt import methods
-from random import choice
 from time import sleep
-
-from sqlalchemy import delete
 from OEMS import app
-from flask import jsonify, render_template, redirect, url_for, flash, request
+from flask import jsonify, render_template, redirect, url_for, flash, request, session, g
 from OEMS.forms import AddUserForm, AddDepartmentForm, AddTeacherForm, AddStudentForm, DeleteForm, EditForm, LoginForm, RegisterForm, SelectElective, ViewStudentForm, ViewStudentFormDept, AddElectiveForm
 from OEMS.forms import FilterUserForm
 from OEMS.models import Department, Elective, Student, Teacher, User
 from OEMS import db, cursor
 from flask_login import login_user, logout_user, login_required, current_user
+
+@app.before_request
+def before_request():
+    session.permanent = True
+    session.modified = True
+    g.user = current_user
 
 #HOME ROUTES
 @app.route('/')
@@ -29,6 +31,8 @@ def login_page():
             login_user(attempted_user)
             flash(f'Success! You are logged in as: {current_user.user_name}', category='success')
             return redirect(url_for('user_routing'))
+        elif not attempted_user:
+            flash('No such User exists! Register as a user to login', category='info')
         else:
             flash('Username and password are not match! Please try again', category='danger')
 

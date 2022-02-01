@@ -27,6 +27,11 @@ class RegisterForm(FlaskForm):
             result = cursor.fetchall()
             if result == []:
                 raise ValidationError('No such Teacher Exists, Please Contact your respective department')
+        if self.user_type.data == 'Department':
+            cursor.execute(f"select department_code from department where department_code='{self.user_id.data}'")
+            result = cursor.fetchall()
+            if result == []:
+                raise ValidationError('No such Department Exists, Please Contact Admin')
 
     def validate_email_address(self, email_address_to_check):
         email_address = User.check_if_email_exists(email_id_to_check=email_address_to_check.data)
@@ -36,7 +41,7 @@ class RegisterForm(FlaskForm):
     user_id = StringField(label='User ID', validators=[DataRequired(), Length(min=5, max=10)])
     username = StringField(label='Full Name:', validators=[Length(min=2, max=30), DataRequired()])
     email_address = StringField(label='Email Address:', validators=[Email(), DataRequired()])
-    user_type = SelectField(label='Choose role', choices = ['Student', 'Teacher'], validators = [DataRequired()])
+    user_type = SelectField(label='Choose role', choices = ['Student', 'Teacher', 'Department'], validators = [DataRequired()])
     password1 = PasswordField(label='Password:', validators=[Length(min=6), DataRequired()])
     password2 = PasswordField(label='Confirm Password:', validators=[EqualTo('password1'), DataRequired()])
     submit = SubmitField(label='Create Account')

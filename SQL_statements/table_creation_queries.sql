@@ -8,15 +8,15 @@ teacher_code varchar(10),
 tname varchar(25),
 department_code varchar(5),
 constraint pk_teacher_code primary key(teacher_code),
-constraint fk_teacher_dept_code foreign key(department_code) references department(department_code));
+constraint fk_teacher_dept_code foreign key(department_code) references department(department_code) on delete cascade);
 
 create table open_elective(
 subject_code varchar(8),
 elective_name varchar(25),
 department_code varchar(5),
 teacher_code varchar(10) default null,
-constraint pk_oe_sc primary key(subject_code),
-constraint fk_oe_dept_code foreign key(department_code) references department(department_code),
+constraint pk_oe_sc primary key(subject_code, department_code),
+constraint fk_oe_dept_code foreign key(department_code) references department(department_code) on delete cascade,
 constraint fk_oe_teach_code foreign key(teacher_code) references teacher(teacher_code) on delete set null);
 
 create table student(
@@ -28,7 +28,7 @@ subject_code varchar(8),
 department_code varchar(5),
 constraint pk_student primary key(usn),
 constraint fk_stu_sub foreign key(subject_code) references open_elective(subject_code),
-constraint fk_stu_dcode foreign key(department_code) references department(department_code));
+constraint fk_stu_dcode foreign key(department_code) references department(department_code) on delete cascade);
 
 create table users(
 user_id varchar(15),
