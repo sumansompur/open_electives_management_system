@@ -370,6 +370,9 @@ def student_page():
     if current_user.user_privileges == 'Student':
         cursor.execute(f"select o.subject_code, o.elective_name from student s, open_elective o where s.usn='{current_user.user_id}' and s.subject_code=o.subject_code")
         data1 = cursor.fetchall()
+        if data1 == []:
+            data1 = [('None', 'None')]
+            flash("Elective not chosen! Please choose an elective soon", category='info')
         student = Student.check_if_student_exists(current_user.user_id)
         form = SelectElective()
         cursor.execute(f"select department_code from department where department_code<>'{student.department_code}'")
